@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.yjy.mapper.YjyTaskMapper">
+    
+    <resultMap type="YjyTask" id="YjyTaskResult">
+        <result property="taskId"    column="task_id"    />
+        <result property="taskTitle"    column="task_title"    />
+        <result property="taskContent"    column="task_content"    />
+        <result property="beginTime"    column="begin_time"    />
+        <result property="overTime"    column="over_time"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="createBy"    column="create_by"    />
+        <result property="taskDid"    column="task_did"    />
+        <result property="taskSid"    column="task_sid"    />
+        <result property="taskStatus"    column="task_status"    />
+        <result property="deptName"    column="dept_name"    />
+        <result property="sceneName"    column="scene_name"    />
+    </resultMap>
+
+    <sql id="selectYjyTaskVo">
+        select t.task_id, t.task_title, t.task_content, t.begin_time, t.over_time, t.create_time, t.create_by, t.task_did, t.task_sid, t.task_status,d.dept_name,s.scene_name
+        from yjy_task t
+                 left join yjy_dept d on t.task_did = d.dept_id
+                 left join yjy_scene s on t.task_sid = s.scene_id
+    </sql>
+
+    <select id="selectYjyTaskList" parameterType="YjyTask" resultMap="YjyTaskResult">
+        <include refid="selectYjyTaskVo"/>
+        <where>  
+            <if test="taskTitle != null  and taskTitle != ''"> and task_title = #{taskTitle}</if>
+            <if test="taskContent != null  and taskContent != ''"> and task_content = #{taskContent}</if>
+            <if test="beginTime != null "> and begin_time = #{beginTime}</if>
+            <if test="overTime != null "> and over_time = #{overTime}</if>
+            <if test="taskDid != null "> and task_did = #{taskDid}</if>
+            <if test="taskSid != null "> and task_sid = #{taskSid}</if>
+            <if test="taskStatus != null  and taskStatus != ''"> and task_status = #{taskStatus}</if>
+        </where>
+    </select>
+    
+    <select id="selectYjyTaskByTaskId" parameterType="Long" resultMap="YjyTaskResult">
+        <include refid="selectYjyTaskVo"/>
+        where task_id = #{taskId}
+    </select>
+        
+    <insert id="insertYjyTask" parameterType="YjyTask" useGeneratedKeys="true" keyProperty="taskId">
+        insert into yjy_task
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="taskTitle != null">task_title,</if>
+            <if test="taskContent != null">task_content,</if>
+            <if test="beginTime != null">begin_time,</if>
+            <if test="overTime != null">over_time,</if>
+            <if test="createTime != null">create_time,</if>
+            <if test="createBy != null">create_by,</if>
+            <if test="taskDid != null">task_did,</if>
+            <if test="taskSid != null">task_sid,</if>
+            <if test="taskStatus != null">task_status,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="taskTitle != null">#{taskTitle},</if>
+            <if test="taskContent != null">#{taskContent},</if>
+            <if test="beginTime != null">#{beginTime},</if>
+            <if test="overTime != null">#{overTime},</if>
+            <if test="createTime != null">#{createTime},</if>
+            <if test="createBy != null">#{createBy},</if>
+            <if test="taskDid != null">#{taskDid},</if>
+            <if test="taskSid != null">#{taskSid},</if>
+            <if test="taskStatus != null">#{taskStatus},</if>
+         </trim>
+    </insert>
+
+    <update id="updateYjyTask" parameterType="YjyTask">
+        update yjy_task
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="taskTitle != null">task_title = #{taskTitle},</if>
+            <if test="taskContent != null">task_content = #{taskContent},</if>
+            <if test="beginTime != null">begin_time = #{beginTime},</if>
+            <if test="overTime != null">over_time = #{overTime},</if>
+            <if test="createTime != null">create_time = #{createTime},</if>
+            <if test="createBy != null">create_by = #{createBy},</if>
+            <if test="taskDid != null">task_did = #{taskDid},</if>
+            <if test="taskSid != null">task_sid = #{taskSid},</if>
+            <if test="taskStatus != null">task_status = #{taskStatus},</if>
+        </trim>
+        where task_id = #{taskId}
+    </update>
+
+    <delete id="deleteYjyTaskByTaskId" parameterType="Long">
+        delete from yjy_task where task_id = #{taskId}
+    </delete>
+
+    <delete id="deleteYjyTaskByTaskIds" parameterType="String">
+        delete from yjy_task where task_id in 
+        <foreach item="taskId" collection="array" open="(" separator="," close=")">
+            #{taskId}
+        </foreach>
+    </delete>
+</mapper>

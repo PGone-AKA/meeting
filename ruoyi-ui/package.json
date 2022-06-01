@@ -1,8 +1,8 @@
 {
-  "name": "ruoyi",
+  "name": "yjy",
   "version": "3.5.0",
-  "description": "若依管理系统",
-  "author": "若依",
+  "description": "江理在线签到系统",
+  "author": "杨佳仪",
   "license": "MIT",
   "scripts": {
     "dev": "vue-cli-service serve",

@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.yjy.mapper.YjySceneMapper">
+    
+    <resultMap type="YjyScene" id="YjySceneResult">
+        <result property="sceneId"    column="scene_id"    />
+        <result property="sceneName"    column="scene_name"    />
+        <result property="sceneDesc"    column="scene_desc"    />
+        <result property="createTime"    column="create_time"    />
+    </resultMap>
+
+    <sql id="selectYjySceneVo">
+        select scene_id, scene_name, scene_desc, create_time from yjy_scene
+    </sql>
+
+    <select id="selectYjySceneList" parameterType="YjyScene" resultMap="YjySceneResult">
+        <include refid="selectYjySceneVo"/>
+        <where>  
+            <if test="sceneName != null  and sceneName != ''"> and scene_name like concat('%', #{sceneName}, '%')</if>
+            <if test="sceneDesc != null  and sceneDesc != ''"> and scene_desc = #{sceneDesc}</if>
+        </where>
+    </select>
+    
+    <select id="selectYjySceneBySceneId" parameterType="Long" resultMap="YjySceneResult">
+        <include refid="selectYjySceneVo"/>
+        where scene_id = #{sceneId}
+    </select>
+        
+    <insert id="insertYjyScene" parameterType="YjyScene" useGeneratedKeys="true" keyProperty="sceneId">
+        insert into yjy_scene
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="sceneName != null">scene_name,</if>
+            <if test="sceneDesc != null">scene_desc,</if>
+            <if test="createTime != null">create_time,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="sceneName != null">#{sceneName},</if>
+            <if test="sceneDesc != null">#{sceneDesc},</if>
+            <if test="createTime != null">#{createTime},</if>
+         </trim>
+    </insert>
+
+    <update id="updateYjyScene" parameterType="YjyScene">
+        update yjy_scene
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="sceneName != null">scene_name = #{sceneName},</if>
+            <if test="sceneDesc != null">scene_desc = #{sceneDesc},</if>
+            <if test="createTime != null">create_time = #{createTime},</if>
+        </trim>
+        where scene_id = #{sceneId}
+    </update>
+
+    <delete id="deleteYjySceneBySceneId" parameterType="Long">
+        delete from yjy_scene where scene_id = #{sceneId}
+    </delete>
+
+    <delete id="deleteYjySceneBySceneIds" parameterType="String">
+        delete from yjy_scene where scene_id in 
+        <foreach item="sceneId" collection="array" open="(" separator="," close=")">
+            #{sceneId}
+        </foreach>
+    </delete>
+</mapper>

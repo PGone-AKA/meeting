@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.yjy.mapper.YjyRecordMapper">
+    
+    <resultMap type="YjyRecord" id="YjyRecordResult">
+        <result property="recordId"    column="record_id"    />
+        <result property="recordTid"    column="record_tid"    />
+        <result property="name"    column="name"    />
+        <result property="signInTime"    column="sign_in_time"    />
+        <result property="signOutTime"    column="sign_out_time"    />
+        <result property="remark"    column="remark"    />
+        <result property="taskName"    column="task_title"    />
+    </resultMap>
+
+    <sql id="selectYjyRecordVo">
+        select r.record_id, r.record_tid, r.name, r.sign_in_time, r.sign_out_time, r.remark , t.task_title
+        from yjy_record r
+            left join yjy_task t on r.record_tid = t.task_id
+
+    </sql>
+
+    <select id="selectYjyRecordList" parameterType="YjyRecord" resultMap="YjyRecordResult">
+        <include refid="selectYjyRecordVo"/>
+        <where>  
+            <if test="recordTid != null "> and record_tid = #{recordTid}</if>
+            <if test="name != null  and name != ''"> and name like concat('%', #{name}, '%')</if>
+            <if test="signInTime != null "> and sign_in_time = #{signInTime}</if>
+            <if test="signOutTime != null "> and sign_out_time = #{signOutTime}</if>
+        </where>
+    </select>
+    
+    <select id="selectYjyRecordByRecordId" parameterType="Long" resultMap="YjyRecordResult">
+        <include refid="selectYjyRecordVo"/>
+        where record_id = #{recordId}
+    </select>
+        
+    <insert id="insertYjyRecord" parameterType="YjyRecord" useGeneratedKeys="true" keyProperty="recordId">
+        insert into yjy_record
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="recordTid != null">record_tid,</if>
+            <if test="name != null and name != ''">name,</if>
+            <if test="signInTime != null">sign_in_time,</if>
+            <if test="signOutTime != null">sign_out_time,</if>
+            <if test="remark != null">remark,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="recordTid != null">#{recordTid},</if>
+            <if test="name != null and name != ''">#{name},</if>
+            <if test="signInTime != null">#{signInTime},</if>
+            <if test="signOutTime != null">#{signOutTime},</if>
+            <if test="remark != null">#{remark},</if>
+         </trim>
+    </insert>
+
+    <update id="updateYjyRecord" parameterType="YjyRecord">
+        update yjy_record
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="recordTid != null">record_tid = #{recordTid},</if>
+            <if test="name != null and name != ''">name = #{name},</if>
+            <if test="signInTime != null">sign_in_time = #{signInTime},</if>
+            <if test="signOutTime != null">sign_out_time = #{signOutTime},</if>
+            <if test="remark != null">remark = #{remark},</if>
+        </trim>
+        where record_id = #{recordId}
+    </update>
+
+    <delete id="deleteYjyRecordByRecordId" parameterType="Long">
+        delete from yjy_record where record_id = #{recordId}
+    </delete>
+
+    <delete id="deleteYjyRecordByRecordIds" parameterType="String">
+        delete from yjy_record where record_id in 
+        <foreach item="recordId" collection="array" open="(" separator="," close=")">
+            #{recordId}
+        </foreach>
+    </delete>
+</mapper>

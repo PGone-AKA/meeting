@@ -323,6 +323,15 @@ export default {
       form: {},
       // 表单校验
       rules: {
+        stuXh: [
+          { required: true, message: "学号不能为空", trigger: "blur" }
+        ],
+        stuName: [
+          { required: true, message: "姓名不能为空", trigger: "blur" }
+        ],
+        stuDid: [
+          { required: true, message: "部门ID不能为空", trigger: "blur" }
+        ],
       }
 
     };
