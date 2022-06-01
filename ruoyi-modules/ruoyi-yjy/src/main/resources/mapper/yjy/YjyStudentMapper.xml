@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.yjy.mapper.YjyStudentMapper">
+    
+    <resultMap type="YjyStudent" id="YjyStudentResult">
+        <result property="stuId"    column="stu_id"    />
+        <result property="stuXh"    column="stu_xh"    />
+        <result property="stuName"    column="stu_name"    />
+        <result property="stuSex"    column="stu_sex"    />
+        <result property="stuDid"    column="stu_did"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="createBy"    column="create_by"    />
+        <result property="stuDept"    column="dept_name"    />
+    </resultMap>
+
+    <sql id="selectYjyStudentVo">
+        select stu_id, stu_xh, stu_name, stu_sex, stu_did, yjy_student.create_time as create_time, create_by,dept_name
+        from yjy_student
+            left join yjy_dept on yjy_student.stu_did = yjy_dept.dept_id
+    </sql>
+
+    <select id="selectYjyStudentList" parameterType="YjyStudent" resultMap="YjyStudentResult">
+        <include refid="selectYjyStudentVo"/>
+        <where>  
+            <if test="stuXh != null  and stuXh != ''"> and stu_xh = #{stuXh}</if>
+            <if test="stuName != null  and stuName != ''"> and stu_name like concat('%', #{stuName}, '%')</if>
+            <if test="stuSex != null  and stuSex != ''"> and stu_sex = #{stuSex}</if>
+            <if test="stuDid != null and stuDid != 0">
+            AND (stu_did = #{stuDid} OR stu_did IN ( SELECT t.dept_id FROM yjy_dept t WHERE find_in_set(#{stuDid}, ancestors) ))
+            </if>
+
+            <if test="createTime != null "> and create_time = #{createTime}</if>
+            <if test="createBy != null  and createBy != ''"> and create_by = #{createBy}</if>
+        </where>
+    </select>
+    
+    <select id="selectYjyStudentByStuId" parameterType="Long" resultMap="YjyStudentResult">
+        <include refid="selectYjyStudentVo"/>
+        where stu_id = #{stuId}
+    </select>
+    <select id="selectYjyStudentBySno" parameterType="String" resultMap="YjyStudentResult">
+        <include refid="selectYjyStudentVo"/>
+        where stu_xh = #{stuXh}
+    </select>
+        
+    <insert id="insertYjyStudent" parameterType="YjyStudent" useGeneratedKeys="true" keyProperty="stuId">
+        insert into yjy_student
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="stuXh != null">stu_xh,</if>
+            <if test="stuName != null">stu_name,</if>
+            <if test="stuSex != null">stu_sex,</if>
+            <if test="stuDid != null">stu_did,</if>
+            <if test="createTime != null">create_time,</if>
+            <if test="createBy != null">create_by,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="stuXh != null">#{stuXh},</if>
+            <if test="stuName != null">#{stuName},</if>
+            <if test="stuSex != null">#{stuSex},</if>
+            <if test="stuDid != null">#{stuDid},</if>
+            <if test="createTime != null">#{createTime},</if>
+            <if test="createBy != null">#{createBy},</if>
+         </trim>
+    </insert>
+
+    <update id="updateYjyStudent" parameterType="YjyStudent">
+        update yjy_student
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="stuXh != null">stu_xh = #{stuXh},</if>
+            <if test="stuName != null">stu_name = #{stuName},</if>
+            <if test="stuSex != null">stu_sex = #{stuSex},</if>
+            <if test="stuDid != null">stu_did = #{stuDid},</if>
+            <if test="createTime != null">create_time = #{createTime},</if>
+            <if test="createBy != null">create_by = #{createBy},</if>
+        </trim>
+        where stu_id = #{stuId}
+    </update>
+
+    <delete id="deleteYjyStudentByStuId" parameterType="Long">
+        delete from yjy_student where stu_id = #{stuId}
+    </delete>
+
+    <delete id="deleteYjyStudentByStuIds" parameterType="String">
+        delete from yjy_student where stu_id in 
+        <foreach item="stuId" collection="array" open="(" separator="," close=")">
+            #{stuId}
+        </foreach>
+    </delete>
+</mapper>

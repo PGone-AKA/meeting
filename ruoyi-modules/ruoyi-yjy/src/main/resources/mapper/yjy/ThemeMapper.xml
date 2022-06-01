@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.yjy.mapper.ThemeMapper">
+    
+    <resultMap type="Theme" id="ThemeResult">
+        <result property="id"    column="id"    />
+        <result property="title"    column="title"    />
+        <result property="count"    column="count"    />
+        <result property="rate"    column="rate"    />
+        <result property="createTime"    column="createTime"    />
+        <result property="createBy"    column="createBy"    />
+        <result property="status"    column="status"    />
+    </resultMap>
+
+    <sql id="selectThemeVo">
+        select id, title, count, rate, createTime, createBy, status from theme
+    </sql>
+
+    <select id="selectThemeList" parameterType="Theme" resultMap="ThemeResult">
+        <include refid="selectThemeVo"/>
+        <where>  
+            <if test="title != null  and title != ''"> and title = #{title}</if>
+            <if test="count != null "> and count = #{count}</if>
+            <if test="rate != null  and rate != ''"> and rate = #{rate}</if>
+            <if test="createTime != null "> and createTime = #{createTime}</if>
+            <if test="createBy != null  and createBy != ''"> and createBy = #{createBy}</if>
+            <if test="status != null "> and status = #{status}</if>
+        </where>
+    </select>
+    
+    <select id="selectThemeById" parameterType="Long" resultMap="ThemeResult">
+        <include refid="selectThemeVo"/>
+        where id = #{id}
+    </select>
+        
+    <insert id="insertTheme" parameterType="Theme" useGeneratedKeys="true" keyProperty="id">
+        insert into theme
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="title != null">title,</if>
+            <if test="count != null">count,</if>
+            <if test="rate != null">rate,</if>
+            <if test="createTime != null">createTime,</if>
+            <if test="createBy != null">createBy,</if>
+            <if test="status != null">status,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="title != null">#{title},</if>
+            <if test="count != null">#{count},</if>
+            <if test="rate != null">#{rate},</if>
+            <if test="createTime != null">#{createTime},</if>
+            <if test="createBy != null">#{createBy},</if>
+            <if test="status != null">#{status},</if>
+         </trim>
+    </insert>
+
+    <update id="updateTheme" parameterType="Theme">
+        update theme
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="title != null">title = #{title},</if>
+            <if test="count != null">count = #{count},</if>
+            <if test="rate != null">rate = #{rate},</if>
+            <if test="createTime != null">createTime = #{createTime},</if>
+            <if test="createBy != null">createBy = #{createBy},</if>
+            <if test="status != null">status = #{status},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteThemeById" parameterType="Long">
+        delete from theme where id = #{id}
+    </delete>
+
+    <delete id="deleteThemeByIds" parameterType="String">
+        delete from theme where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+</mapper>

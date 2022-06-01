@@ -248,6 +248,7 @@
         <module>ruoyi-modules</module>
         <module>ruoyi-api</module>
         <module>ruoyi-common</module>
+        <module>ruoyi-modules-yang</module>
     </modules>
     <packaging>pom</packaging>
 

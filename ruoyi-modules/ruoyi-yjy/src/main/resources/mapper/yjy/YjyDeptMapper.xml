@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.yjy.mapper.YjyDeptMapper">
+    
+    <resultMap type="YjyDept" id="YjyDeptResult">
+        <result property="deptId"    column="dept_id"    />
+        <result property="parentId"    column="parent_id"    />
+        <result property="deptName"    column="dept_name"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="ancestors"    column="ancestors"    />
+    </resultMap>
+
+    <sql id="selectYjyDeptVo">
+        select dept_id, parent_id,ancestors, dept_name, create_time from yjy_dept
+    </sql>
+
+    <select id="selectYjyDeptList" parameterType="YjyDept" resultMap="YjyDeptResult">
+        <include refid="selectYjyDeptVo"/>
+        <where>  
+            <if test="deptName != null  and deptName != ''"> and dept_name like concat('%', #{deptName}, '%')</if>
+        </where>
+    </select>
+    
+    <select id="selectYjyDeptByDeptId" parameterType="Long" resultMap="YjyDeptResult">
+        <include refid="selectYjyDeptVo"/>
+        where dept_id = #{deptId}
+    </select>
+        
+    <insert id="insertYjyDept" parameterType="YjyDept" useGeneratedKeys="true" keyProperty="deptId">
+        insert into yjy_dept
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="parentId != null">parent_id,</if>
+            <if test="deptName != null">dept_name,</if>
+            <if test="createTime != null">create_time,</if>
+            <if test="ancestors != null and ancestors != ''">ancestors,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="parentId != null">#{parentId},</if>
+            <if test="deptName != null">#{deptName},</if>
+            <if test="createTime != null">#{createTime},</if>
+            <if test="ancestors != null and ancestors != ''">#{ancestors},</if>
+
+         </trim>
+    </insert>
+
+    <update id="updateYjyDept" parameterType="YjyDept">
+        update yjy_dept
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="parentId != null">parent_id = #{parentId},</if>
+            <if test="deptName != null">dept_name = #{deptName},</if>
+            <if test="createTime != null">create_time = #{createTime},</if>
+        </trim>
+        where dept_id = #{deptId}
+    </update>
+
+    <delete id="deleteYjyDeptByDeptId" parameterType="Long">
+        delete from yjy_dept where dept_id = #{deptId}
+    </delete>
+
+    <delete id="deleteYjyDeptByDeptIds" parameterType="String">
+        delete from yjy_dept where dept_id in 
+        <foreach item="deptId" collection="array" open="(" separator="," close=")">
+            #{deptId}
+        </foreach>
+    </delete>
+</mapper>
