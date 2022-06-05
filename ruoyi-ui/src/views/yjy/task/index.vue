@@ -144,11 +144,12 @@
             @click="handleUpdate(scope.row)"
             v-hasPermi="['yjy:task:edit']"
           >修改</el-button>
+
           <el-button
             size="mini"
             type="text"
             icon="el-icon-data-line"
-            @click="handleUpdate(scope.row)"
+            @click="showProgress(scope.row)"
             v-hasPermi="['yjy:task:progress']"
           >查看签到进度</el-button>
           <el-button
@@ -325,6 +326,21 @@ export default {
   },
 
   methods: {
+
+    showProgress(row){
+      this.reset();
+      const taskId = row.taskId || this.ids
+
+      //this.$tab.openPage("签到进度", "/progress",{tid:taskId});
+      this.$router.push({
+        path:'/progress',
+        query:{
+          tid:taskId,
+        }
+      })
+    },
+
+
     getListScene(){
       listScene().then(response => {
         this.task = response.rows;

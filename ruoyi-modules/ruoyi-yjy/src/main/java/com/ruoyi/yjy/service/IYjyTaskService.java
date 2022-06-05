@@ -58,4 +58,11 @@ public interface IYjyTaskService
      * @return 结果
      */
     public int deleteYjyTaskByTaskId(Long taskId);
+
+    /**
+     * 任务是否开启
+     * @param id
+     * @return
+     */
+    public boolean isWork(Long id);
 }

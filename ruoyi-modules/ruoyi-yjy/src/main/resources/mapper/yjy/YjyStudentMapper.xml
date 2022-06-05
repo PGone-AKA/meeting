@@ -25,7 +25,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <include refid="selectYjyStudentVo"/>
         <where>  
             <if test="stuXh != null  and stuXh != ''"> and stu_xh = #{stuXh}</if>
-            <if test="stuName != null  and stuName != ''"> and stu_name like concat('%', #{stuName}, '%')</if>
+            <if test="stuName != null  and stuName != ''"> and stu_name ={stuName}</if>
             <if test="stuSex != null  and stuSex != ''"> and stu_sex = #{stuSex}</if>
             <if test="stuDid != null and stuDid != 0">
             AND (stu_did = #{stuDid} OR stu_did IN ( SELECT t.dept_id FROM yjy_dept t WHERE find_in_set(#{stuDid}, ancestors) ))
@@ -35,11 +35,21 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="createBy != null  and createBy != ''"> and create_by = #{createBy}</if>
         </where>
     </select>
+
+
     
     <select id="selectYjyStudentByStuId" parameterType="Long" resultMap="YjyStudentResult">
         <include refid="selectYjyStudentVo"/>
         where stu_id = #{stuId}
     </select>
+
+    <select id="selectYjyStudentByDeptId" parameterType="Long" resultMap="YjyStudentResult">
+        <include refid="selectYjyStudentVo"/>
+        where stu_did = #{stuDid}
+    </select>
+
+
+
     <select id="selectYjyStudentBySno" parameterType="String" resultMap="YjyStudentResult">
         <include refid="selectYjyStudentVo"/>
         where stu_xh = #{stuXh}

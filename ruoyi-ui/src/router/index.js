@@ -47,6 +47,18 @@ export const constantRoutes = [
     hidden: true
   },
   {
+    name:'form',
+    path: '/form',
+    component: () => import('@/views/yjy/form'),
+    hidden: true
+  },
+  {
+    name:'progress',
+    path: '/progress',
+    component: () => import('@/views/yjy/progress'),
+    hidden: true
+  },
+  {
     path: '/register',
     component: () => import('@/views/register'),
     hidden: true

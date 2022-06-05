@@ -175,5 +175,10 @@ public class YjyStudentServiceImpl implements IYjyStudentService
         return successMsg.toString();
     }
 
+    @Override
+    public List<YjyStudent> selectYjyStudentByDeptId(Long stuDid){
+        return yjyStudentMapper.selectYjyStudentByDeptId(stuDid);
+    }
+
 
 }

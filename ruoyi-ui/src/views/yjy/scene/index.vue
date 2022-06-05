@@ -94,7 +94,7 @@
             icon="el-icon-paperclip"
             @click="showCode(scope.row)"
             v-hasPermi="['yjy:scene:edit']"
-          >查看签到码</el-button>
+          >设计签到表</el-button>
           <el-button
             size="mini"
             type="text"
@@ -239,11 +239,14 @@ export default {
     showCode(row) {
       this.reset();
       const sceneId = row.sceneId || this.ids
-      getScene(sceneId).then(response => {
-        this.form = response.data;
-        this.open = true;
-        this.title = "查看二维码";
-      });
+      // getScene(sceneId).then(response => {
+      //   this.form = response.data;
+      //   this.open = true;
+      //   this.title = "查看二维码";
+      // });
+      this.$router.push({
+        name:'form',
+      })
     },
     /** 提交按钮 */
     submitForm() {

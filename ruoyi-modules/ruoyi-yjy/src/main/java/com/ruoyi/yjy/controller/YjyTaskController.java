@@ -3,15 +3,13 @@ package com.ruoyi.yjy.controller;
 import java.util.List;
 import java.io.IOException;
 import javax.servlet.http.HttpServletResponse;
+
+import com.ruoyi.yjy.domain.YjyRecord;
+import com.ruoyi.yjy.domain.YjyStudent;
+import com.ruoyi.yjy.service.IYjyRecordService;
+import com.ruoyi.yjy.service.IYjyStudentService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import com.ruoyi.common.log.annotation.Log;
 import com.ruoyi.common.log.enums.BusinessType;
 import com.ruoyi.common.security.annotation.RequiresPermissions;
@@ -34,6 +32,12 @@ public class YjyTaskController extends BaseController
 {
     @Autowired
     private IYjyTaskService yjyTaskService;
+
+    @Autowired
+    private IYjyRecordService yjyRecordService;
+
+    @Autowired
+    private IYjyStudentService yjyStudentService;
 
     /**
      * 查询任务表列表
@@ -102,4 +106,33 @@ public class YjyTaskController extends BaseController
     {
         return toAjax(yjyTaskService.deleteYjyTaskByTaskIds(taskIds));
     }
+
+    @GetMapping("show")
+    public AjaxResult showInfo(@RequestParam("tid") Long tid){
+        AjaxResult ajax = AjaxResult.success();
+        YjyTask yjyTask = yjyTaskService.selectYjyTaskByTaskId(tid);
+        YjyRecord yjyRecord = new YjyRecord();
+        yjyRecord.setRecordTid(tid);
+        List<YjyRecord> recordList = yjyRecordService.selectYjyRecordList(yjyRecord);
+        if (yjyTask!=null){
+            Long did = yjyTask.getTaskDid();
+            List<YjyStudent> studentList = yjyStudentService.selectYjyStudentByDeptId(did);
+            ajax.put("task",yjyTask);
+            ajax.put("record",recordList);
+            ajax.put("students",studentList);
+        }
+
+        return ajax;
+
+    }
+
+    @GetMapping("status")
+    public AjaxResult setStatus(@RequestParam("tid")Long tid,@RequestParam("status") String status){
+        YjyTask yjyTask = new YjyTask();
+        yjyTask.setTaskId(tid);
+        yjyTask.setTaskStatus(status);
+        return toAjax(yjyTaskService.updateYjyTask(yjyTask));
+    }
+
+
 }

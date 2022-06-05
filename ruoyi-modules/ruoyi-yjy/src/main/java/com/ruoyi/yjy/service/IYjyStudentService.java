@@ -18,6 +18,7 @@ public interface IYjyStudentService
      * @return 人员信息
      */
     public YjyStudent selectYjyStudentByStuId(Long stuId);
+    public List<YjyStudent> selectYjyStudentByDeptId(Long stuDid);
 
     /**
      * 查询人员信息列表

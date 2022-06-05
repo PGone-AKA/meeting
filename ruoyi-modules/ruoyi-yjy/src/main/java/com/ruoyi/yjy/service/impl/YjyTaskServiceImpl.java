@@ -92,4 +92,15 @@ public class YjyTaskServiceImpl implements IYjyTaskService
     {
         return yjyTaskMapper.deleteYjyTaskByTaskId(taskId);
     }
+
+    @Override
+    public boolean isWork(Long id){
+        boolean flag = false;
+        YjyTask yjyTask  = yjyTaskMapper.selectYjyTaskByTaskId(id);
+        if (yjyTask!=null&&"1".equals(yjyTask.getTaskStatus())){
+            flag = true;
+        }
+        return flag;
+    }
+
 }

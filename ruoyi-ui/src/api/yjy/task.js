@@ -42,3 +42,18 @@ export function delTask(taskId) {
     method: 'delete'
   })
 }
+// 删除人员信息
+export function showInfo(stuId) {
+  return request({
+    url: '/yjy/task/show?tid=' + stuId,
+    method: 'get'
+  })
+}
+// 更新状元
+export function updateStatus(tid,status) {
+  return request({
+    url: '/yjy/task/status?tid=' + tid+"&status="+status,
+    method: 'get'
+  })
+}
+

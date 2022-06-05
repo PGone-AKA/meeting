@@ -29,6 +29,7 @@ public interface YjyStudentMapper
      * @return 人员信息集合
      */
     public List<YjyStudent> selectYjyStudentList(YjyStudent yjyStudent);
+    public List<YjyStudent> selectYjyStudentByDeptId(Long stuDid);
 
     /**
      * 新增人员信息
@@ -61,4 +62,6 @@ public interface YjyStudentMapper
      * @return 结果
      */
     public int deleteYjyStudentByStuIds(Long[] stuIds);
+
+
 }
